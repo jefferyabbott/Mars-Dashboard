@@ -1,4 +1,7 @@
+
+
 /* -------------------  MOBILE  --------------------- */
+
 
 body {
   display: flex;
@@ -6,6 +9,7 @@ body {
   font-family: Arial;
   min-height: 100vh;
 }
+
 
 header {
   /* header styles */
@@ -35,4 +39,17 @@ footer {
 
 @media (min-width: 1824px) {
   /* use mobile */
+}
+
+
+
+.menu ul { 
+  list-style: none; 
+  margin: 0; 
+  padding: 0; 
+  display: flex; 
+}
+
+.menu li {
+  flex: 3; 
 }

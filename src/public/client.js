@@ -1,6 +1,6 @@
 let store = {
-    user: { name: "Student" },
-    apod: '',
+    // user: { name: "Student" },
+    photos: {},
     rovers: ['Curiosity', 'Opportunity', 'Spirit'],
 }
 
@@ -16,30 +16,36 @@ const render = async (root, state) => {
     root.innerHTML = App(state)
 }
 
+const displayRoverData = (rover) => {
+    const rDisplay = document.getElementById('rover_display')
+    rDisplay.innerText = rover
+    loadRoverData(rover)
+}
+
+// generate menu
+const roverLinks = (rovers) => {
+    htmlText = '<div class="menu"><ul>'
+    rovers.forEach((r) => {
+        htmlText += `<li onclick="displayRoverData('${r}')">${r}</li>`
+    })
+    htmlText += '</ul></div>'
+    return htmlText
+}
 
 // create content
 const App = (state) => {
     let { rovers, apod } = state
 
     return `
-        <header></header>
+        <header>
+            <h1>Mars Dashboard</h1>
+            <hr/>
+            <div>${roverLinks(rovers)}</div>
+        </header>
+        <hr/>
         <main>
-            ${Greeting(store.user.name)}
-            <section>
-                <h3>Put things on the page!</h3>
-                <p>Here is an example section.</p>
-                <p>
-                    One of the most popular websites at NASA is the Astronomy Picture of the Day. In fact, this website is one of
-                    the most popular websites across all federal agencies. It has the popular appeal of a Justin Bieber video.
-                    This endpoint structures the APOD imagery and associated metadata so that it can be repurposed for other
-                    applications. In addition, if the concept_tags parameter is set to True, then keywords derived from the image
-                    explanation are returned. These keywords could be used as auto-generated hashtags for twitter or instagram feeds;
-                    but generally help with discoverability of relevant imagery.
-                </p>
-                ${ImageOfTheDay(apod)}
-            </section>
+            <div id="rover_display"></div>
         </main>
-        <footer></footer>
     `
 }
 
@@ -49,6 +55,10 @@ window.addEventListener('load', () => {
 })
 
 // ------------------------------------------------------  COMPONENTS
+
+// const ShowImages = (rover, photos) => {
+//     if 
+// }
 
 // Pure function that renders conditional information -- THIS IS JUST AN EXAMPLE, you can delete it.
 const Greeting = (name) => {
@@ -92,6 +102,32 @@ const ImageOfTheDay = (apod) => {
 }
 
 // ------------------------------------------------------  API CALLS
+
+const loadRoverData = (rover) => {
+    let url = new URL(`http://localhost:3000/nasa?rover=${rover}`);
+    fetch(url)
+        .then(res => {
+            if (res.ok) {
+                return res.json();
+            } else {
+                throw new Error('Oops! Something went wrong! Please try again.');
+            }
+        }).then(data => {
+            const images = data.roverData.photos.map((r) => {
+                return r.img_src
+            })
+            console.log(images)
+            // const date = data.roverData[0].earth_date;
+            // const { name, launch_date, landing_date, status } = data.roverData[0].rover;
+            // const roverDetails = { date, rovername: name, launchDate: launch_date, landingDate: landing_date, status };
+            // const roverObject = { photos: data.roverData, roverDetails }
+            // const newState = store.set("currentRover", rover).setIn(["roversData", `${rover}`], roverObject);
+            // updateStore(store, newState);
+        }).catch(error => {
+            alert(error.message);
+        });
+
+}
 
 // Example API call
 const getImageOfTheDay = (state) => {
