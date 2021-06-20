@@ -1,6 +1,5 @@
 let store = {
-    // user: { name: "Student" },
-    photos: {},
+    photos: [],
     rovers: ['Curiosity', 'Opportunity', 'Spirit'],
 }
 
@@ -20,6 +19,7 @@ const displayRoverData = (rover) => {
     const rDisplay = document.getElementById('rover_display')
     rDisplay.innerText = rover
     loadRoverData(rover)
+    ShowImages(store.photos)
 }
 
 // generate menu
@@ -56,9 +56,11 @@ window.addEventListener('load', () => {
 
 // ------------------------------------------------------  COMPONENTS
 
-// const ShowImages = (rover, photos) => {
-//     if 
-// }
+const ShowImages = (photos) => {
+    if (photos.length !== 0) {
+        console.log(photos)
+    }
+}
 
 // Pure function that renders conditional information -- THIS IS JUST AN EXAMPLE, you can delete it.
 const Greeting = (name) => {
@@ -113,20 +115,20 @@ const loadRoverData = (rover) => {
                 throw new Error('Oops! Something went wrong! Please try again.');
             }
         }).then(data => {
-            const images = data.roverData.photos.map((r) => {
+            const photos = data.roverData.photos.map((r) => {
                 return r.img_src
             })
-            console.log(images)
+            // console.log(images)
             // const date = data.roverData[0].earth_date;
             // const { name, launch_date, landing_date, status } = data.roverData[0].rover;
             // const roverDetails = { date, rovername: name, launchDate: launch_date, landingDate: landing_date, status };
             // const roverObject = { photos: data.roverData, roverDetails }
-            // const newState = store.set("currentRover", rover).setIn(["roversData", `${rover}`], roverObject);
-            // updateStore(store, newState);
+            // const newState = store.set(photos);
+
+            updateStore(store, {...store, photos} );
         }).catch(error => {
             alert(error.message);
         });
-
 }
 
 // Example API call
