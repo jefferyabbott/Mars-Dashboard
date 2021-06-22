@@ -53,3 +53,7 @@ footer {
 .menu li {
   flex: 3; 
 }
+
+.roverImg {
+  width: 200px;
+}

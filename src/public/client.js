@@ -27,6 +27,7 @@ const render = async (root, state) => {
         const images = state.roverData.map((r) => {
             const imgElement = document.createElement('img');
             imgElement.src = r.img_src;
+            imgElement.class = 'roverImg'
             imageContainer.appendChild(imgElement);
             return r.img_src;
         });
