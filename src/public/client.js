@@ -24,18 +24,11 @@ const render = async (root, state) => {
     // show images
     if (Object.keys(state.roverData).length !== 0) {
         const imageContainer = document.getElementById('rover_images');
-        const latestImageDate = state.roverData.reduce((a, b) => {
-            console.log(a)
-            console.log(b)
-           return new Date(a.earth_date) > new Date(b.earth_date) ? a : b;
-        });
-        console.log(`Latest date: ${latestImageDate}`)
-
         const images = state.roverData.map((r) => {
             const imgElement = document.createElement('img');
             imgElement.src = r.img_src;
-            imageContainer.appendChild(imgElement)
-            return r.img_src
+            imageContainer.appendChild(imgElement);
+            return r.img_src;
         });
     }
     
@@ -130,17 +123,7 @@ const loadRoverImages = (rover) => {
                 throw new Error('Oops! Something went wrong! Please try again.');
             }
         }).then(data => {
-            // const photos = data.roverData.photos.map((r) => {
-            //     return r.img_src
-            // })
             const roverData = data.roverData.photos
-            // console.log(images)
-            // const date = data.roverData[0].earth_date;
-            // const { name, launch_date, landing_date, status } = data.roverData[0].rover;
-            // const roverDetails = { date, rovername: name, launchDate: launch_date, landingDate: landing_date, status };
-            // const roverObject = { photos: data.roverData, roverDetails }
-            // const newState = store.set(photos);
-
             updateStore(store, {...store, roverData} );
         }).catch(error => {
             alert(error.message);
