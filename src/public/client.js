@@ -15,40 +15,60 @@ const updateStore = (store, newState) => {
 const render = async (root, state) => {
     root.innerHTML = App(state);
     
-    // set selected rover details
-    if (state.selectedRover) {
-        const rDisplay = document.getElementById('rover_display');
-        rDisplay.innerText = state.selectedRover;
-    }
     
     // show images
     if (Object.keys(state.roverData).length !== 0) {
         const imageContainer = document.getElementById('rover_images');
-        const images = state.roverData.map((r) => {
+        state.roverData.forEach((r) => {
+            const imgDiv = document.createElement('div');
             const imgElement = document.createElement('img');
             imgElement.src = r.img_src;
             imgElement.classList.add('roverImg');
-            imageContainer.appendChild(imgElement);
             const camera = document.createElement('p');
             camera.textContent = r.camera.full_name
-            imageContainer.appendChild(camera)
-            return r.img_src;
+
+            imgDiv.appendChild(imgElement)
+            imgDiv.appendChild(camera)
+            imageContainer.appendChild(imgDiv);
         });
     }
+
+    if (state.selectedRover) {
+        const allRovers = document.querySelectorAll('.roverLabel')
+        allRovers.forEach((r) => {
+            r.classList.remove('seletedRover');
+        });
+        const roverLabel = document.getElementById(state.selectedRover)
+        roverLabel.classList.add('selectedRover')
+    }
+    
     
     
 }
 
 const displayRoverData = (rover) => {
+    
+    const allRovers = document.querySelectorAll('.roverLabel')
+    allRovers.forEach((r) => {
+        r.classList.remove('seletedRover');
+    });
+
     store.selectedRover = rover 
     loadRoverImages(rover)
+
+    
+
+    const roverLabel = document.getElementById(rover)
+    roverLabel.classList.add('selectedRover')
+    
+
 }
 
 // generate menu
 const roverLinks = (rovers) => {
     htmlText = '<div class="menu"><ul>'
     rovers.forEach((r) => {
-        htmlText += `<li onclick="displayRoverData('${r}')">${r}</li>`
+        htmlText += `<li onclick="displayRoverData('${r}')" class="roverLabel" id=${r}>${r}</li>`
     })
     htmlText += '</ul></div>'
     return htmlText

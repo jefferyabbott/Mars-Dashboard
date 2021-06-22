@@ -57,3 +57,8 @@ footer {
 .roverImg {
   width: 300px;
 }
+
+.selectedRover {
+  background-color: black;
+  color: white;
+}
