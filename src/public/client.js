@@ -13,23 +13,30 @@ const updateStore = (store, newState) => {
 }
 
 const render = async (root, state) => {
-    root.innerHTML = App(state)
+    root.innerHTML = App(state);
     
     // set selected rover details
     if (state.selectedRover) {
-        const rDisplay = document.getElementById('rover_display')
-        rDisplay.innerText = state.selectedRover
+        const rDisplay = document.getElementById('rover_display');
+        rDisplay.innerText = state.selectedRover;
     }
     
     // show images
     if (Object.keys(state.roverData).length !== 0) {
         const imageContainer = document.getElementById('rover_images');
+        const latestImageDate = state.roverData.reduce((a, b) => {
+            console.log(a)
+            console.log(b)
+           return new Date(a.earth_date) > new Date(b.earth_date) ? a : b;
+        });
+        console.log(`Latest date: ${latestImageDate}`)
+
         const images = state.roverData.map((r) => {
             const imgElement = document.createElement('img');
             imgElement.src = r.img_src;
             imageContainer.appendChild(imgElement)
             return r.img_src
-        })
+        });
     }
     
     
