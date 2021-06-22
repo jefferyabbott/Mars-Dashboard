@@ -1,4 +1,5 @@
 let store = {
+    selectedRover: '',
     photos: [],
     rovers: ['Curiosity', 'Opportunity', 'Spirit'],
 }
@@ -13,13 +14,30 @@ const updateStore = (store, newState) => {
 
 const render = async (root, state) => {
     root.innerHTML = App(state)
+    
+    // set details
+    if (state.selectedRover) {
+        const rDisplay = document.getElementById('rover_display')
+        rDisplay.innerText = state.selectedRover
+    }
+    
+
+    // show images
+    if (state.photos.length > 0) {
+        console.log('showing images');
+        const imageContainer = document.getElementById('rover_images');
+        for (photo of state.photos) {
+            const photoElement = document.createElement('img');
+            photoElement.src = photo;
+            imageContainer.appendChild(photoElement)
+        }
+    }
+    
 }
 
 const displayRoverData = (rover) => {
-    const rDisplay = document.getElementById('rover_display')
-    rDisplay.innerText = rover
-    loadRoverData(rover)
-    ShowImages(store.photos)
+    store.selectedRover = rover 
+    loadRoverImages(rover)
 }
 
 // generate menu
@@ -34,7 +52,7 @@ const roverLinks = (rovers) => {
 
 // create content
 const App = (state) => {
-    let { rovers, apod } = state
+    let { rovers } = state
 
     return `
         <header>
@@ -45,6 +63,7 @@ const App = (state) => {
         <hr/>
         <main>
             <div id="rover_display"></div>
+            <div id="rover_images"></div>
         </main>
     `
 }
@@ -62,18 +81,7 @@ const ShowImages = (photos) => {
     }
 }
 
-// Pure function that renders conditional information -- THIS IS JUST AN EXAMPLE, you can delete it.
-const Greeting = (name) => {
-    if (name) {
-        return `
-            <h1>Welcome, ${name}!</h1>
-        `
-    }
 
-    return `
-        <h1>Hello!</h1>
-    `
-}
 
 // Example of a pure function that renders infomation requested from the backend
 const ImageOfTheDay = (apod) => {
@@ -105,7 +113,7 @@ const ImageOfTheDay = (apod) => {
 
 // ------------------------------------------------------  API CALLS
 
-const loadRoverData = (rover) => {
+const loadRoverImages = (rover) => {
     let url = new URL(`http://localhost:3000/nasa?rover=${rover}`);
     fetch(url)
         .then(res => {
@@ -131,13 +139,3 @@ const loadRoverData = (rover) => {
         });
 }
 
-// Example API call
-const getImageOfTheDay = (state) => {
-    let { apod } = state
-
-    fetch(`http://localhost:3000/apod`)
-        .then(res => res.json())
-        .then(apod => updateStore(store, { apod }))
-
-    return data
-}
