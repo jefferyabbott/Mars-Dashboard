@@ -29,6 +29,9 @@ const render = async (root, state) => {
             imgElement.src = r.img_src;
             imgElement.classList.add('roverImg');
             imageContainer.appendChild(imgElement);
+            const camera = document.createElement('p');
+            camera.textContent = r.camera.full_name
+            imageContainer.appendChild(camera)
             return r.img_src;
         });
     }
