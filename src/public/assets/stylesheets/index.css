@@ -43,22 +43,9 @@ footer {
 
 
 
-.menu ul { 
-  list-style: none; 
-  margin: 0; 
-  padding: 0; 
-  display: flex; 
-}
-
-.menu li {
-  flex: 3; 
-}
 
 .roverImg {
   width: 300px;
+  padding: 20px;
 }
 
-.selectedRover {
-  background-color: black;
-  color: white;
-}
