@@ -46,6 +46,10 @@ footer {
 
 .roverImg {
   width: 300px;
-  padding: 20px;
+  padding: 10px;
+  vertical-align: bottom;
 }
 
+.cameraName {
+  text-align: center;
+}

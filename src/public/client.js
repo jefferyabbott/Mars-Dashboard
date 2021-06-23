@@ -13,37 +13,42 @@ const updateStore = (store, newState) => {
 }
 
 const render = async (root, state) => {
-    root.innerHTML = App(state);
-    
-    // show images
-    // if (Object.keys(state.roverData).length !== 0) {
-    //     const imageContainer = document.getElementById('rover_images');
-    //     state.roverData.forEach((r) => {
-    //         const imgDiv = document.createElement('div');
-    //         const imgElement = document.createElement('img');
-    //         imgElement.src = r.img_src;
-    //         imgElement.classList.add('roverImg');
-    //         const camera = document.createElement('p');
-    //         camera.textContent = r.camera.full_name
-
-    //         imgDiv.appendChild(imgElement)
-    //         imgDiv.appendChild(camera)
-    //         imageContainer.appendChild(imgDiv);
-    //     });
-    // }
-    
+    root.innerHTML = App(state);    
 }
 
-const showImages = (state) => {
+const showImages = (roverData) => {
     
-    if (Object.keys(state.roverData).length !== 0) {
+    if (Object.keys(roverData).length !== 0) {
         let imageContent = `<div class="container">
+        <div>
+            <h1>${roverData[0].rover.name}</h1>
+            <table class="table">
+                <tr>
+                    <td>Launch date</td>
+                    <td>${roverData[0].rover.launch_date}</td>
+                </tr>
+                <tr>
+                    <td>Landing date</td>
+                    <td>${roverData[0].rover.landing_date}</td>
+                </tr>
+                <tr>
+                    <td>Photo date</td>
+                    <td>${roverData[0].earth_date}</td>
+                </tr>
+                <tr>
+                    <td>Status</td>
+                    <td>${roverData[0].rover.status}</td>
+                </tr>
+            </table>
+        </div>
         <div class="row">
 
       `
-      state.roverData.forEach((r) => {
-        imageContent += `<div class="col-lg-4">
-        <img src="${r.img_src}" class="roverImg" alt="...">
+      roverData.forEach((r) => {
+          console.log(r)
+        imageContent += `<div class="col-lg-4 align-self-end">
+        <img src="${r.img_src}" class="roverImg mx-auto d-block" alt="...">
+        <p class="cameraName">${r.camera.full_name}</p>
       </div>`
       })
       imageContent +=  `
@@ -78,19 +83,18 @@ const roverLinks = (rovers) => {
     return roverList
 }
 
+
 // create content
 const App = (state) => {
-    let { rovers } = state
+    let { rovers, roverData } = state
 
     return `
         <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#">Mars Dashboard</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDarkDropdown" aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
+
+    <div class="navbar-collapse" id="navbarNavDarkDropdown">
       <ul class="navbar-nav">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -105,10 +109,12 @@ const App = (state) => {
 </nav>
 
 
+
+
         </header>
         <hr/>
         <main>
-            ${showImages(state)}
+            ${showImages(roverData)}
         </main>
     `
 }
@@ -121,34 +127,6 @@ window.addEventListener('load', () => {
 // ------------------------------------------------------  COMPONENTS
 
 
-
-// Example of a pure function that renders infomation requested from the backend
-const ImageOfTheDay = (apod) => {
-
-    // If image does not already exist, or it is not from today -- request it again
-    const today = new Date()
-    const photodate = new Date(apod.date)
-    console.log(photodate.getDate(), today.getDate());
-
-    console.log(photodate.getDate() === today.getDate());
-    if (!apod || apod.date === today.getDate() ) {
-        getImageOfTheDay(store)
-    }
-
-    // check if the photo of the day is actually type video!
-    if (apod.media_type === "video") {
-        return (`
-            <p>See today's featured video <a href="${apod.url}">here</a></p>
-            <p>${apod.title}</p>
-            <p>${apod.explanation}</p>
-        `)
-    } else {
-        return (`
-            <img src="${apod.image.url}" height="350px" width="100%" />
-            <p>${apod.image.explanation}</p>
-        `)
-    }
-}
 
 // ------------------------------------------------------  API CALLS
 
