@@ -20,11 +20,6 @@ const render = async (root, state) => {
 }
 
 const showImages = (roverData) => {
-    console.log('--------------------------------------------------------------')
-    console.log(typeof roverData)
-    console.log('--------------------------------------------------------------')
-    console.log(roverData)
-    console.log('--------------------------------------------------------------')
     if (Object.keys(roverData).length !== 0) {
         let imageContent = `<div class="container">
         <div>
@@ -62,7 +57,6 @@ const showImages = (roverData) => {
     } else {
         return `<div>Please select a rover</div>`;
     }
-
 }
 
 const displayRoverData = (rover) => {
@@ -136,8 +130,6 @@ const loadRoverImages = (rover) => {
                 throw new Error('Oops! Something went wrong! Please try again.');
             }
         }).then(data => {
-            // const roverData = data.roverData.photos
-            console.log(data)
             const roverData = data.roverData.latest_photos
             updateStore(store, {...store, roverData} );
         }).catch(error => {
