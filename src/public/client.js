@@ -45,7 +45,6 @@ const showImages = (roverData) => {
 
       `
       roverData.forEach((r) => {
-          console.log(r)
         imageContent += `<div class="col-lg-4 align-self-end">
         <img src="${r.img_src}" class="roverImg mx-auto d-block" alt="...">
         <p class="cameraName">${r.camera.full_name}</p>
