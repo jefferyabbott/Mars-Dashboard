@@ -1,3 +1,5 @@
+
+
 let store = {
     selectedRover: '',
     roverData: {},
@@ -5,19 +7,24 @@ let store = {
 }
 
 // add our markup to the page
-const root = document.getElementById('root')
+const root = document.getElementById('root');
 
 const updateStore = (store, newState) => {
-    store = Object.assign(store, newState)
-    render(root, store)
+    store = Object.assign(store, newState);
+    render(root, store);
 }
+
 
 const render = async (root, state) => {
     root.innerHTML = App(state);    
 }
 
 const showImages = (roverData) => {
-    
+    console.log('--------------------------------------------------------------')
+    console.log(typeof roverData)
+    console.log('--------------------------------------------------------------')
+    console.log(roverData)
+    console.log('--------------------------------------------------------------')
     if (Object.keys(roverData).length !== 0) {
         let imageContent = `<div class="container">
         <div>
@@ -41,9 +48,8 @@ const showImages = (roverData) => {
                 </tr>
             </table>
         </div>
-        <div class="row">
+        <div class="row">`;
 
-      `
       roverData.forEach((r) => {
         imageContent += `<div class="col-lg-4 align-self-end">
         <img src="${r.img_src}" class="roverImg mx-auto d-block" alt="...">
@@ -51,41 +57,37 @@ const showImages = (roverData) => {
       </div>`
       })
       imageContent +=  `
-    </div></div>
-        `
-        return imageContent
+    </div></div>`;
+        return imageContent;
     } else {
-        return `<div>Please select a rover</div>`
+        return `<div>Please select a rover</div>`;
     }
 
 }
 
 const displayRoverData = (rover) => {
-    
     const allRovers = document.querySelectorAll('.roverLabel')
     allRovers.forEach((r) => {
         r.classList.remove('seletedRover');
     });
 
-    store.selectedRover = rover 
-    loadRoverImages(rover)
-
-
+    store.selectedRover = rover;
+    loadRoverImages(rover);
 }
 
 // generate menu
 const roverLinks = (rovers) => {
-    let roverList = ''
+    let roverList = '';
     rovers.forEach((r) => {
-        roverList += `<li onclick="displayRoverData('${r}')"><p class="dropdown-item">${r}</p></li>`
+        roverList += `<li onclick="displayRoverData('${r}')"><p class="dropdown-item">${r}</p></li>`;
     })
-    return roverList
+    return roverList;
 }
 
 
 // create content
 const App = (state) => {
-    let { rovers, roverData } = state
+    let { rovers, roverData } = state;
 
     return `
         <header>
@@ -106,21 +108,16 @@ const App = (state) => {
     </div>
   </div>
 </nav>
-
-
-
-
         </header>
         <hr/>
         <main>
             ${showImages(roverData)}
-        </main>
-    `
+        </main>`;
 }
 
 // listening for load event because page should load before any JS is called
 window.addEventListener('load', () => {
-    render(root, store)
+    render(root, store);
 })
 
 // ------------------------------------------------------  COMPONENTS
@@ -139,7 +136,9 @@ const loadRoverImages = (rover) => {
                 throw new Error('Oops! Something went wrong! Please try again.');
             }
         }).then(data => {
-            const roverData = data.roverData.photos
+            // const roverData = data.roverData.photos
+            console.log(data)
+            const roverData = data.roverData.latest_photos
             updateStore(store, {...store, roverData} );
         }).catch(error => {
             alert(error.message);
