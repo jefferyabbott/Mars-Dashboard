@@ -1,26 +1,18 @@
-// let store = {
-//     selectedRover: '',
-//     roverData: {},
-//     rovers: ['Curiosity', 'Opportunity', 'Spirit'],
-// }
-
-let store = Immutable.Map({
+let store = {
   selectedRover: '',
-  roverData: {},
-  rovers: ['Curiosity', 'Opportunity', 'Spirit'],
-});
+  roverData: Immutable.Map({
+    Curiosity: {},
+    Opportunity: {},
+    Spirit: {},
+  }),
+};
 
 // add our markup to the page
 const root = document.getElementById('root');
 
-// const updateStore = (store, newState) => {
-//     store = Object.assign(store, newState);
-//     render(root, store);
-// }
-
-const updateStore = (newState) => {
-  const newStore = store.merge(store, newState);
-  return newStore;
+const updateStore = (state, newState) => {
+  store = state.merge(newState);
+  render(root, store);
 };
 
 const render = async (root, state) => {
@@ -48,32 +40,14 @@ const roverLinks = (rovers) => {
 
 // create content
 const App = (state) => {
-  let { rovers, roverData } = state;
-
-  return `
-        <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">Mars Dashboard</a>
-
-    <div class="navbar-collapse" id="navbarNavDarkDropdown">
-      <ul class="navbar-nav">
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Rovers
-          </a>
-          <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
-          ${roverLinks(rovers)}
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
-        </header>
-        <hr/>
-        <main>
-            ${showImages(roverData)}
-        </main>`;
+  const { selectedRover } = state;
+  const roverData = state.roverData.get(selectedRover);
+  const [...rovers] = state.roverData.keys();
+  console.log('Found Rovers:');
+  console.log(rovers);
+  const page =
+    header(rovers) + '<hr/>' + roverDetails(selectedRover, roverData);
+  return page;
 };
 
 // listening for load event because page should load before any JS is called
@@ -83,9 +57,42 @@ window.addEventListener('load', () => {
 
 // ------------------------------------------------------  COMPONENTS
 
+const header = (rovers) => {
+  return `
+        <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Mars Dashboard</a>
+
+                <div class="navbar-collapse" id="navbarNavDarkDropdown">
+                  <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Rovers
+                      </a>
+                      <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                        ${roverLinks(rovers)}
+                    </li>
+                  </ul>
+              </div>
+            </div>
+          </nav>
+        </header>`;
+};
+
+const roverDetails = (selectedRover, roverData) => {
+  if (!roverData) {
+    return `<div>Please select a rover.</div>`;
+  }
+  return `
+        <hr/>
+        <main>
+            ${showImages(store.roverData.get(selectedRover))}
+        </main>`;
+};
+
 const showImages = (roverData) => {
-  if (Object.keys(roverData).length !== 0) {
-    let imageContent = `<div class="container">
+  let imageContent = `<div class="container">
           <div>
               <h1>${roverData[0].rover.name}</h1>
               <table class="table">
@@ -109,18 +116,15 @@ const showImages = (roverData) => {
           </div>
           <div class="row">`;
 
-    roverData.forEach((r) => {
-      imageContent += `<div class="col-lg-4 align-self-end">
+  roverData.forEach((r) => {
+    imageContent += `<div class="col-lg-4 align-self-end">
           <img src="${r.img_src}" class="roverImg mx-auto d-block" alt="...">
           <p class="cameraName">${r.camera.full_name}</p>
         </div>`;
-    });
-    imageContent += `
+  });
+  imageContent += `
       </div></div>`;
-    return imageContent;
-  } else {
-    return `<div>Please select a rover</div>`;
-  }
+  return imageContent;
 };
 
 // ------------------------------------------------------  API CALLS
@@ -137,7 +141,10 @@ const loadRoverImages = (rover) => {
     })
     .then((data) => {
       const roverData = data.roverData.latest_photos;
-      updateStore(store, { ...store, roverData });
+      const newState = store
+        .set('selectedRover', rover)
+        .setIn([roverData, `${rover}`], roverData);
+      updateStore(store, newState);
     })
     .catch((error) => {
       alert(error.message);
