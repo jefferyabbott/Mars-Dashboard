@@ -32,9 +32,11 @@ const displayRoverData = (rover) => {
 // generate menu
 const roverLinks = (rovers) => {
   let roverList = '';
-  rovers.forEach((r) => {
-    roverList += `<li onclick="displayRoverData('${r}')"><p class="dropdown-item">${r}</p></li>`;
-  });
+  const roverListHtml = rovers.map(
+    (r) =>
+      `<li onclick="displayRoverData('${r}')"><p class="dropdown-item">${r}</p></li>`
+  );
+  roverListHtml.forEach((html) => (roverList += html));
   return roverList;
 };
 
