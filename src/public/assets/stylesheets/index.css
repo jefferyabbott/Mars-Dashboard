@@ -1,8 +1,3 @@
-
-
-/* -------------------  MOBILE  --------------------- */
-
-
 body {
   display: flex;
   flex-direction: column;
@@ -10,39 +5,10 @@ body {
   min-height: 100vh;
 }
 
-
-header {
-  /* header styles */
-}
-
 main {
   flex: 1;
   padding: 20px;
 }
-
-footer {
-  /* footer styles */
-}
-
-/* -------------------  TABLET  --------------------- */
-@media (min-width: 768px) {
-  /* use mobile */
-}
-
-/* -------------------  DESKTOP  -------------------- */
-
-@media (min-width: 1224px) {
-  /* use mobile */
-}
-
-/* -------------------  LARGE SCREENS  -------------- */
-
-@media (min-width: 1824px) {
-  /* use mobile */
-}
-
-
-
 
 .roverImg {
   width: 300px;
