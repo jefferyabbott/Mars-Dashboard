@@ -1,11 +1,11 @@
-let store = {
+let store = Immutable.Map({
   selectedRover: '',
   roverData: Immutable.Map({
-    Curiosity: {},
-    Opportunity: {},
-    Spirit: {},
+    Curiosity: [],
+    Opportunity: [],
+    Spirit: [],
   }),
-};
+});
 
 // add our markup to the page
 const root = document.getElementById('root');
@@ -40,11 +40,9 @@ const roverLinks = (rovers) => {
 
 // create content
 const App = (state) => {
-  const { selectedRover } = state;
-  const roverData = state.roverData.get(selectedRover);
-  const [...rovers] = state.roverData.keys();
-  console.log('Found Rovers:');
-  console.log(rovers);
+  const selectedRover = state.get('selectedRover');
+  const roverData = state.get('roverData');
+  const [...rovers] = roverData.keys();
   const page =
     header(rovers) + '<hr/>' + roverDetails(selectedRover, roverData);
   return page;
@@ -81,13 +79,13 @@ const header = (rovers) => {
 };
 
 const roverDetails = (selectedRover, roverData) => {
-  if (!roverData) {
+  if (!selectedRover) {
     return `<div>Please select a rover.</div>`;
   }
   return `
         <hr/>
         <main>
-            ${showImages(store.roverData.get(selectedRover))}
+            ${showImages(store.get('roverData').get(selectedRover))}
         </main>`;
 };
 
@@ -143,7 +141,7 @@ const loadRoverImages = (rover) => {
       const roverData = data.roverData.latest_photos;
       const newState = store
         .set('selectedRover', rover)
-        .setIn([roverData, `${rover}`], roverData);
+        .setIn(['roverData', rover], roverData);
       updateStore(store, newState);
     })
     .catch((error) => {
